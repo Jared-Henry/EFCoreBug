@@ -22,7 +22,6 @@ namespace ConsoleApp1
                 using (var db = new TestDbContext(builder.Options))
                 {
                     //See https://docs.microsoft.com/en-us/ef/core/querying/tracking
-                    //
                     //The following query should not track any entity objects:
                     var result = (from t in db.Things
                                   select new
