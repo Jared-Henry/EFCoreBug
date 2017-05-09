@@ -7,7 +7,7 @@ namespace ConsoleApp1
     class Program
     {
         static void Main(string[] args)
-        {           
+        {     
             try
             {
                 var builder = new DbContextOptionsBuilder<TestDbContext>();
@@ -21,10 +21,9 @@ namespace ConsoleApp1
                 }
                 using (var db = new TestDbContext(builder.Options))
                 {
-                    //This throws an exception because the "Thing" object
-                    //is instantiated during the request. The constructor
-                    //of the Thing class should not be called when the query 
-                    //is materialized to an anonymous type.
+                    //See https://docs.microsoft.com/en-us/ef/core/querying/tracking
+                    //
+                    //The following query should not track any entity objects:
                     var result = (from t in db.Things
                                   select new
                                   {
@@ -35,6 +34,7 @@ namespace ConsoleApp1
             }
             catch(ConstructorCalledException ex)
             {
+                //But, as you can see, it does try to instantiate the 'Thing' entity.
                 Console.WriteLine("Error: Constructor was called during request.");
             }
             Console.ReadLine();
